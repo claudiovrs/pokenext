@@ -3,7 +3,6 @@ import getConfig from 'next/config';
 export default async function handler(req, res) {
    const { publicRuntimeConfig: { API, baseURL_image } } = getConfig();
    try {
-      console.log(req)
       const id = `${req.path?.id ? req.path?.id : 1}`;
       const urlApi = `${API.pokeapi}/${id}`;
 

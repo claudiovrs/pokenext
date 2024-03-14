@@ -7,11 +7,9 @@ import getConfig from 'next/config';
 import Image from 'next/image'
 
 export const getStaticPaths = async () => {
-  const { publicRuntimeConfig: { API } } = getConfig();
   const maxPokemons = 251
-  // const api = `${hostAPI}/pokemons?limit=${maxPokemons}`;
-  const api = `${API.pokeapi}?limit=${maxPokemons}`;
-
+  const api = `${hostAPI}/pokemons?limit=${maxPokemons}`;
+  
   const res = await fetch(api)
 
   const data = await res?.json()
@@ -29,10 +27,8 @@ export const getStaticPaths = async () => {
 }
 
 export const getStaticProps = async ({ params: { pokemonId } }) => {
-  const { publicRuntimeConfig: { API } } = getConfig();
-  // const api = `${API.pokeapi}?limit=${maxPokemons}`;
-  const api = `${API.pokeapi}/${pokemonId}`;
-
+  const api = `${hostAPI}/pokemons/details/${pokemonId}`;
+  
   const res = await fetch(api)
 
   const data = await res?.json()
