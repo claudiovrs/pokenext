@@ -1,13 +1,11 @@
-import getConfig from 'next/config';
+import { hostAPI } from '../../../config';
 
 export default async function handler(req, res) {
-   const { publicRuntimeConfig: { API } } = getConfig();
-   
    try {
       const query = `${req.query?.limit ? `?limit=${req.query.limit}` : ''}`;
-      const urlApi = `${API.pokeapi}${query}`;
-
-      const response = await fetch(urlApi, {
+      const api = `${hostAPI}/pokemons${query}`;
+  
+      const response = await fetch(api, {
          headers: {
             'Content-Type': 'application/json',
          },
