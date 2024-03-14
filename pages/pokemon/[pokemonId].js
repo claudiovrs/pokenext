@@ -1,20 +1,24 @@
 import styles from '../../styles/Pokemon.module.css'
 
-import { hostAPI }  from '../../config';
+import { hostAPI } from '../../config';
+
+import getConfig from 'next/config';
 
 import Image from 'next/image'
 
 export const getStaticPaths = async () => {
+  const { publicRuntimeConfig: { API } } = getConfig();
   const maxPokemons = 251
-  const api = `${hostAPI}/pokemons?limit=${maxPokemons}`;
+  // const api = `${hostAPI}/pokemons?limit=${maxPokemons}`;
+  const api = `${API.pokeapi}?limit=${maxPokemons}`;
 
   const res = await fetch(api)
 
-  const data = await res.json()
+  const data = await res?.json()
 
-  const paths = data.results.map((pokemon, index) => {
+  const paths = data.results?.map((pokemon, index) => {
     return {
-      params: { pokemonId: index.toString() },
+      params: { pokemonId: (index + 1)?.toString() },
     }
   })
 
@@ -24,12 +28,14 @@ export const getStaticPaths = async () => {
   }
 }
 
-export const getStaticProps = async (context) => {
-  const id = context.params?.pokemonId
+export const getStaticProps = async ({ params: { pokemonId } }) => {
+  const { publicRuntimeConfig: { API } } = getConfig();
+  // const api = `${API.pokeapi}?limit=${maxPokemons}`;
+  const api = `${API.pokeapi}/${pokemonId}`;
 
-  const res = await fetch(`${hostAPI}/pokemons/details/${id}`)
+  const res = await fetch(api)
 
-  const data = await res.json()
+  const data = await res?.json()
 
   return {
     props: { pokemon: data },
@@ -53,7 +59,7 @@ export default function Pokemon({ pokemon }) {
       <div>
         <h3>Tipo:</h3>
         <div className={styles.types_container}>
-          {pokemon?.types.map((item, index) => (
+          {pokemon?.types?.map((item, index) => (
             <span
               key={index}
               className={`${styles.type} ${styles['type_' + item.type.name]}`}

@@ -4,22 +4,30 @@ import Image from "next/image";
 
 import styles from "../styles/Home.module.css";
 
-import { hostAPI }  from '../config';
+import { hostAPI } from '../config';
+import getConfig from 'next/config';
 
 export async function getStaticProps() {
-   const maxPokemons = 251;
+  
+   const { publicRuntimeConfig: { API } } = getConfig();
+   try {
+      const maxPokemons = 251;
+      // const api = `${hostAPI}/pokemons?limit=${maxPokemons}`;
+      const api = `${API.pokeapi}?limit=${maxPokemons}`;
+  
+      const res = await fetch(api);
 
-   const api = `${hostAPI}/pokemons?limit=${maxPokemons}`;
+      const data = await res?.json();
 
-   const res = await fetch(api);
+      return {
+         props: {
+            pokemons: data.results,
+         },
+      };
 
-   const data = await res.json();
-
-   return {
-      props: {
-         pokemons: data.results,
-      },
-   };
+   } catch (err) {
+      console.log(err);
+   }
 }
 
 export default function Home({ pokemons }) {
@@ -37,7 +45,7 @@ export default function Home({ pokemons }) {
             />
          </div>
          <div className={styles.pokemon_container}>
-            {pokemons.map((pokemon) => (
+            {pokemons?.map((pokemon) => (
                <Card key={pokemon.id} pokemon={pokemon} />
             ))}
          </div>

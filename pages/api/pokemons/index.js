@@ -1,7 +1,8 @@
 import getConfig from 'next/config';
 
 export default async function handler(req, res) {
-   const { serverRuntimeConfig: { API } } = getConfig();
+   const { publicRuntimeConfig: { API } } = getConfig();
+   
    try {
       const query = `${req.query?.limit ? `?limit=${req.query.limit}` : ''}`;
       const urlApi = `${API.pokeapi}${query}`;
@@ -18,7 +19,7 @@ export default async function handler(req, res) {
          item.id = index + 1;
       });
       
-      res.status(200).json(result);
+      process.env.NODE_ENV !== 'production' ? res.status(200).json(result) : res.status(200).json({})
    } catch (err) {
       console.log(err)
    }
