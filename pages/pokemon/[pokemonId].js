@@ -1,6 +1,7 @@
 import styles from '../../styles/Pokemon.module.css'
 
 import { hostAPI } from '../../config';
+import getConfig from 'next/config';
 
 import Image from 'next/image'
 
@@ -8,9 +9,9 @@ export const getStaticPaths = async () => {
   const maxPokemons = 251
   const api = `${hostAPI}/pokemons?limit=${maxPokemons}`;
   
-  const res = await fetch(api)
+  const res = await fetch(api);
 
-  const data = await res?.json()
+  const data = await res?.json();
 
   const paths = data.results?.map((pokemon, index) => {
     return {
@@ -27,9 +28,9 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({ params: { pokemonId } }) => {
   const api = `${hostAPI}/pokemons/details/${pokemonId}`;
   
-  const res = await fetch(api)
+  const res = await fetch(api);
 
-  const data = await res?.json()
+  const data = await res?.json();
 
   return {
     props: { pokemon: data },

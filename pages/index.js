@@ -5,29 +5,20 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 
 import { hostAPI } from '../config';
-import getConfig from 'next/config';
 
 export async function getStaticProps() {
-  
-   const { publicRuntimeConfig: { API } } = getConfig();
-   try {
-      const maxPokemons = 251;
-      // const api = `${hostAPI}/pokemons?limit=${maxPokemons}`;
-      const api = `${API.pokeapi}?limit=${maxPokemons}`;
-  
-      const res = await fetch(api);
+   const maxPokemons = 251;
+   const api = `${hostAPI}/pokemons?limit=${maxPokemons}`;
 
-      const data = await res?.json();
+   const res = await fetch(api);
 
-      return {
-         props: {
-            pokemons: data.results,
-         },
-      };
+   const data = await res?.json();
 
-   } catch (err) {
-      console.log(err);
-   }
+   return {
+      props: {
+         pokemons: data.results,
+      },
+   };
 }
 
 export default function Home({ pokemons }) {
